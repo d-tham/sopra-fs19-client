@@ -160,6 +160,14 @@ class Login extends React.Component {
               >
                 Login
               </Button>
+              <Button
+                  width="35%"
+                  onClick={() => {
+                    this.props.history.push(`/register`);
+                  }}
+              >
+                Register instead?
+              </Button>
             </ButtonContainer>
           </Form>
         </FormContainer>

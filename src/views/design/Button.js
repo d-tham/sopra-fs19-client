@@ -14,6 +14,7 @@ export const Button = styled.button`
   height: 35px;
   border: none;
   border-radius: 20px;
+  margin: 30px;
   cursor: ${props => (props.disabled ? "default" : "pointer")};
   opacity: ${props => (props.disabled ? 0.4 : 1)};
   background: rgb(16, 89, 255);
