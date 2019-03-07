@@ -114,7 +114,7 @@ class Login extends React.Component {
   /**
    * Redirecting to the registration page.
    */
-  register() {
+  redirectToRegister() {
     this.props.history.push('/register');
   }
 
@@ -170,7 +170,7 @@ class Login extends React.Component {
               <Button
                   width="35%"
                   onClick={() => {
-                    this.register();
+                    this.redirectToRegister();
                   }}
               >
                 Register instead?

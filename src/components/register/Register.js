@@ -75,9 +75,9 @@ class Register extends React.Component {
     constructor() {
         super();
         this.state = {
-            name: null,
+            username: null,
             password: null,
-            username: null
+            name: null
         };
     }
     /**
@@ -97,12 +97,13 @@ class Register extends React.Component {
             })
         })
             .then(response => response.json())
-            .then(returnedUser => {
-                //const user = new User(returnedUser);
-                // store the token into the local storage
-                //localStorage.setItem("token", user.token);
-                // user registration successfully worked --> navigate to the route /login in the GameRouter
-                this.login();
+
+            .then(response => {
+                if (response.status === 400) {
+                    alert("The username was already taken.\nPlease choose a different username.")
+                } else {
+                    this.redirectToLogin();
+                }
             })
 
             .catch(err => { // Catching the error
@@ -114,7 +115,10 @@ class Register extends React.Component {
             });
     }
 
-    login() {
+    /**
+     * Redirecting to the login page.
+     */
+    redirectToLogin() {
         this.props.history.push('/login');
     }
 
