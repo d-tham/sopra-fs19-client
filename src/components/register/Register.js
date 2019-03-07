@@ -181,7 +181,7 @@ class Register extends React.Component {
                             <Button
                                 width="35%"
                                 onClick={() => {
-                                    this.login();
+                                    this.redirectToLogin();
                                 }}
                             >
                                 Login instead?
