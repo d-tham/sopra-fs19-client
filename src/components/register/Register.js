@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { BaseContainer } from "../../helpers/layout";
 import { getDomain } from "../../helpers/getDomain";
-import User from "../shared/models/User";
+// import User from "../shared/models/User";
 import { withRouter } from "react-router-dom";
 import { Button } from "../../views/design/Button";
 
@@ -76,6 +76,7 @@ class Register extends React.Component {
         super();
         this.state = {
             name: null,
+            password: null,
             username: null
         };
     }
@@ -83,7 +84,7 @@ class Register extends React.Component {
      * HTTP POST request is sent to the backend.
      * If the request is successful, a new user is returned to the front-end and its token is stored in the localStorage.
      */
-    login() {
+    register() {
         fetch(`${getDomain()}/users`, {
             method: "POST",
             headers: {
@@ -91,24 +92,30 @@ class Register extends React.Component {
             },
             body: JSON.stringify({
                 username: this.state.username,
+                password: this.state.password,
                 name: this.state.name
             })
         })
             .then(response => response.json())
             .then(returnedUser => {
-                const user = new User(returnedUser);
+                //const user = new User(returnedUser);
                 // store the token into the local storage
-                localStorage.setItem("token", user.token);
-                // user login successfully worked --> navigate to the route /game in the GameRouter
-                this.props.history.push(`/game`);
+                //localStorage.setItem("token", user.token);
+                // user registration successfully worked --> navigate to the route /login in the GameRouter
+                this.login();
             })
-            .catch(err => {
+
+            .catch(err => { // Catching the error
                 if (err.message.match(/Failed to fetch/)) {
                     alert("The server cannot be reached. Did you start it?");
                 } else {
-                    alert(`Something went wrong during the login: ${err.message}`);
+                    alert(`Something went wrong during the registration: ${err.message}`);
                 }
             });
+    }
+
+    login() {
+        this.props.history.push('/login');
     }
 
     /**
@@ -150,26 +157,19 @@ class Register extends React.Component {
                                 this.handleInputChange("name", e.target.value);
                             }}
                         />
-                        <Label>Birthday</Label>
-                        <InputField
-                            placeholder="Enter here..."
-                            onChange={e => {
-                                this.handleInputChange("name", e.target.value);
-                            }}
-                        />
                         <Label>Password</Label>
                         <InputField
                             placeholder="Enter here..."
                             onChange={e => {
-                                this.handleInputChange("name", e.target.value);
+                                this.handleInputChange("password", e.target.value);
                             }}
                         />
                         <ButtonContainer>
                             <Button
-                                disabled={!this.state.username || !this.state.name}
+                                disabled={!this.state.username || !this.state.name || !this.state.password}
                                 width="50%"
                                 onClick={() => {
-                                    this.login();
+                                    this.register();
                                 }}
                             >
                                 Register
@@ -177,7 +177,7 @@ class Register extends React.Component {
                             <Button
                                 width="35%"
                                 onClick={() => {
-                                    this.props.history.push(`/login`);
+                                    this.login();
                                 }}
                             >
                                 Login instead?
