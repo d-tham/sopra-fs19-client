@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { BaseContainer } from "../../helpers/layout";
 import { getDomain } from "../../helpers/getDomain";
-// import User from "../shared/models/User";
+import User from "../shared/models/User";
 import { withRouter } from "react-router-dom";
 import { Button } from "../../views/design/Button";
 
@@ -20,7 +20,7 @@ const Form = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 60%;
-  height: 450px;
+  height: 375px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
@@ -65,7 +65,7 @@ const ButtonContainer = styled.div`
  * https://reactjs.org/docs/react-component.html
  * @Class
  */
-class Register extends React.Component {
+class Profile extends React.Component {
     /**
      * If you don’t initialize the state and you don’t bind methods, you don’t need to implement a constructor for your React component.
      * The constructor for a React component is called before it is mounted (rendered).
@@ -75,51 +75,49 @@ class Register extends React.Component {
     constructor() {
         super();
         this.state = {
+            id: null,
             username: null,
-            password: null,
-            name: null
+            name: null,
+            status: null,
+            creationDate: null,
+            birthDate: null
         };
     }
     /**
      * HTTP POST request is sent to the backend.
      * If the request is successful, a new user is returned to the front-end and its token is stored in the localStorage.
      */
-    register() {
-        fetch(`${getDomain()}/users`, {
-            method: "POST",
+    componentDidMount() {
+        fetch(`${getDomain()}/users/1`, {
+            method: "GET",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                username: this.state.username,
-                password: this.state.password,
-                name: this.state.name
+                id: this.state.username,
             })
         })
             .then(response => response.json())
-
-            .then(response => {
-                if (response.status === 400) {
-                    alert("The username was already taken.\nPlease choose a different username.")
-                } else {
-                    this.redirectToLogin();
-                }
+            .then(returnedUser => {
+                const user = new User(returnedUser);
+                // store the token into the local storage
+                // user login successfully worked --> navigate to the route /game in the GameRouter
+                this.props.history.push(`/game`);
             })
-
-            .catch(err => { // Catching the error
+            .catch(err => {
                 if (err.message.match(/Failed to fetch/)) {
                     alert("The server cannot be reached. Did you start it?");
                 } else {
-                    alert(`Something went wrong during the registration: ${err.message}`);
+                    alert(`Something went wrong during the login: ${err.message}`);
                 }
             });
     }
 
     /**
-     * Redirecting to the login page.
+     * Redirecting to the registration page.
      */
-    redirectToLogin() {
-        this.props.history.push('/login');
+    redirectToRegister() {
+        this.props.history.push('/register');
     }
 
     /**
@@ -149,42 +147,35 @@ class Register extends React.Component {
                     <Form>
                         <Label>Username</Label>
                         <InputField
-                            placeholder="Enter here..."
+                            placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange("username", e.target.value);
                             }}
                         />
-                        <Label>Name</Label>
-                        <InputField
-                            placeholder="Enter here..."
-                            onChange={e => {
-                                this.handleInputChange("name", e.target.value);
-                            }}
-                        />
                         <Label>Password</Label>
                         <InputField
-                            placeholder="Enter here..."
+                            placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange("password", e.target.value);
                             }}
                         />
                         <ButtonContainer>
                             <Button
-                                disabled={!this.state.username || !this.state.name || !this.state.password}
+                                disabled={!this.state.username || !this.state.password}
                                 width="50%"
                                 onClick={() => {
-                                    this.register();
+                                    this.login();
                                 }}
                             >
-                                Register
+                                Login
                             </Button>
                             <Button
                                 width="35%"
                                 onClick={() => {
-                                    this.redirectToLogin();
+                                    this.redirectToRegister();
                                 }}
                             >
-                                Login instead?
+                                Register instead?
                             </Button>
                         </ButtonContainer>
                     </Form>
@@ -198,4 +189,4 @@ class Register extends React.Component {
  * You can get access to the history object's properties via the withRouter.
  * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
  */
-export default withRouter(Register);
+export default withRouter(Login);
