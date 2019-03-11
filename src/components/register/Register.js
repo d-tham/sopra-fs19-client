@@ -77,7 +77,7 @@ class Register extends React.Component {
         this.state = {
             username: null,
             password: null,
-            name: null
+            name: null,
         };
     }
     /**
@@ -93,7 +93,7 @@ class Register extends React.Component {
             body: JSON.stringify({
                 username: this.state.username,
                 password: this.state.password,
-                name: this.state.name
+                name: this.state.name,
             })
         })
             .then(response => response.json())
