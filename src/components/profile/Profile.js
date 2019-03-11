@@ -76,7 +76,7 @@ class Profile extends React.Component {
      * You may call setState() immediately in componentDidMount().
      * It will trigger an extra rendering, but it will happen before the browser updates the screen.
      */
-    componentDidMount() {
+    componentWillMount() {
         let id = this.props.match.params.id;
         fetch(`${getDomain()}/users/${id}`, {
             method: "GET",
@@ -115,6 +115,14 @@ class Profile extends React.Component {
                             >
                                 Return
                             </Button>
+                            <Button
+                                width="50%"
+                                onClick={() => {
+                                    this.redirectToEditor();
+                                }}
+                            >
+                                Edit Profile
+                            </Button>
                         </ButtonContainer>
                     </Form>
                 </FormContainer>
@@ -127,6 +135,13 @@ class Profile extends React.Component {
      */
     redirectToGame() {
         this.props.history.push('/game');
+    }
+
+    /**
+     * Redirecting to the edit profile page.
+     */
+    redirectToEditor() {
+        this.props.history.push('/user/1/profile/edit');
     }
 }
 

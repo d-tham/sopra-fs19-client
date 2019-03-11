@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { BaseContainer } from "../../helpers/layout";
 import { getDomain } from "../../helpers/getDomain";
-// import User from "../shared/models/User";
+import User from "../shared/models/User";
 import { withRouter } from "react-router-dom";
 import { Button } from "../../views/design/Button";
 
@@ -20,7 +20,7 @@ const Form = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 60%;
-  height: 450px;
+  height: 375px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
@@ -28,6 +28,18 @@ const Form = styled.div`
   border-radius: 5px;
   background: linear-gradient(rgb(27, 124, 186), rgb(2, 46, 101));
   transition: opacity 0.5s ease, transform 0.5s ease;
+`;
+
+const Label = styled.label`
+  color: white;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+`;
+
+const ButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 `;
 
 const InputField = styled.input`
@@ -44,18 +56,6 @@ const InputField = styled.input`
   color: white;
 `;
 
-const Label = styled.label`
-  color: white;
-  margin-bottom: 10px;
-  text-transform: uppercase;
-`;
-
-const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 20px;
-`;
-
 /**
  * Classes in React allow you to have an internal state within the class and to have the React life-cycle for your component.
  * You should have a class (instead of a functional component) when:
@@ -65,7 +65,7 @@ const ButtonContainer = styled.div`
  * https://reactjs.org/docs/react-component.html
  * @Class
  */
-class Register extends React.Component {
+class ProfileEditor extends React.Component {
     /**
      * If you don’t initialize the state and you don’t bind methods, you don’t need to implement a constructor for your React component.
      * The constructor for a React component is called before it is mounted (rendered).
@@ -75,54 +75,36 @@ class Register extends React.Component {
     constructor() {
         super();
         this.state = {
-            username: null,
-            name: null,
-            birthDate: null,
-            password: null,
-            confirmPassword: null,
+            user: new User()
         };
     }
     /**
      * HTTP POST request is sent to the backend.
      * If the request is successful, a new user is returned to the front-end and its token is stored in the localStorage.
      */
-    register() {
-        fetch(`${getDomain()}/users`, {
-            method: "POST",
+
+    edit() {
+        let id = this.props.match.params.id;
+        fetch(`${getDomain()}/users/${id}`, {
+            method: "PUT",
             headers: {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
                 username: this.state.username,
-                password: this.state.password,
-                name: this.state.name,
                 birthDate: this.state.birthDate
             })
         })
-            .then(response => response.json())
+            //.then(this.props.history.push("/game"))
+            .then(() => this.redirectToProfile)
 
-            .then(response => {
-                if (response.status === 400) {
-                    alert("The username was already taken.\nPlease choose a different username.")
-                } else {
-                    this.redirectToLogin();
-                }
-            })
-
-            .catch(err => { // Catching the error
+            .catch(err => {
                 if (err.message.match(/Failed to fetch/)) {
                     alert("The server cannot be reached. Did you start it?");
                 } else {
-                    alert(`Something went wrong during the registration: ${err.message}`);
+                    alert(`Something went wrong during the login: ${err.message}`);
                 }
             });
-    }
-
-    /**
-     * Redirecting to the login page.
-     */
-    redirectToLogin() {
-        this.props.history.push('/login');
     }
 
     /**
@@ -136,73 +118,42 @@ class Register extends React.Component {
         this.setState({ [key]: value });
     }
 
-    /**
-     * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
-     * Initialization that requires DOM nodes should go here.
-     * If you need to load data from a remote endpoint, this is a good place to instantiate the network request.
-     * You may call setState() immediately in componentDidMount().
-     * It will trigger an extra rendering, but it will happen before the browser updates the screen.
-     */
-    componentDidMount() {}
-
     render() {
         return (
             <BaseContainer>
                 <FormContainer>
                     <Form>
-                        <Label>Username</Label>
+                        <Label>{'Enter your new Username: ' }</Label>
                         <InputField
-                            placeholder="Enter here..."
+                            placeholder="Enter here.."
                             onChange={e => {
                                 this.handleInputChange("username", e.target.value);
                             }}
                         />
-                        <Label>Name</Label>
-                        <InputField
-                            placeholder="Enter here..."
-                            onChange={e => {
-                                this.handleInputChange("name", e.target.value);
-                            }}
-                        />
-                        <Label>Date of Birth</Label>
+                        <Label>{'Enter your new date of birth: ' }</Label>
                         <InputField
                             type="date"
-                            placeholder="Enter here..."
+                            placeholder="Enter here.. Format: DD/MM/YYYY"
                             onChange={e => {
                                 this.handleInputChange("birthDate", e.target.value);
                             }}
                         />
-                        <Label>Choose a Password</Label>
-                        <InputField
-                            placeholder="Enter here..."
-                            onChange={e => {
-                                this.handleInputChange("password", e.target.value);
-                            }}
-                        />
-                        <Label>Confirm Password</Label>
-                        <InputField
-                            placeholder="Enter here..."
-                            onChange={e => {
-                                this.handleInputChange("confirmPassword", e.target.value);
-                            }}
-                        />
                         <ButtonContainer>
                             <Button
-                                disabled={!this.state.username || !this.state.name || !this.state.password}
                                 width="50%"
                                 onClick={() => {
-                                    this.register();
+                                    this.redirectToProfile();
                                 }}
                             >
-                                Register
+                                Cancel
                             </Button>
                             <Button
-                                width="35%"
+                                width="50%"
                                 onClick={() => {
-                                    this.redirectToLogin();
+                                    this.edit();
                                 }}
                             >
-                                Login instead?
+                                Update
                             </Button>
                         </ButtonContainer>
                     </Form>
@@ -210,10 +161,18 @@ class Register extends React.Component {
             </BaseContainer>
         );
     }
+
+
+    /**
+     * Redirecting to the edit profile page.
+     */
+    redirectToProfile() {
+        this.props.history.push('/game');
+    }
 }
 
 /**
  * You can get access to the history object's properties via the withRouter.
  * withRouter will pass updated match, location, and history props to the wrapped component whenever it renders.
  */
-export default withRouter(Register);
+export default withRouter(ProfileEditor);

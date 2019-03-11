@@ -40,7 +40,7 @@ const Player = ({ user }) => {
     <Container>
         <Name>{user.name}</Name>
         <UserName>
-            <a href={"/users/" + user.id}> {user.username}</a>
+            <a href={"/user/" + user.id + "/profile/"}> {user.username}</a>
         </UserName>
         <Id>Id: {user.id}</Id>
     </Container>

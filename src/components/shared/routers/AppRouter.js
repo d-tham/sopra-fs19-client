@@ -3,9 +3,11 @@ import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 import { GameGuard } from "../routeProtectors/GameGuard";
 import GameRouter from "./GameRouter";
 import { LoginGuard } from "../routeProtectors/LoginGuard";
+import { ProfileGuard } from "../routeProtectors/ProfileGuard";
 import Login from "../../login/Login";
 import Register from "../../register/Register";
 import Profile from "../../profile/Profile";
+import ProfileEditor from "../../profile/ProfileEditor";
 
 /**
  * Main router of your application.
@@ -47,12 +49,22 @@ class AppRouter extends React.Component {
                   )}
               />
               <Route
-                  path="/users/:id"
+                  path="/user/:id/profile"
                   exact
                   render={() => (
-                      <Profile />
+                      <ProfileGuard>
+                        <Profile />
+                      </ProfileGuard>
                   )}
               />
+              <Route
+                  path="/user/:id/profile/edit"
+                  exact
+                  render={() => (
+                      <ProfileEditor />
+                  )}
+              />
+
             <Route path="/" exact render={() => <Redirect to={"/game"} />} />
           </div>
         </Switch>
