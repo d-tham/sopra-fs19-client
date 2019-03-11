@@ -95,14 +95,13 @@ class ProfileEditor extends React.Component {
                 birthDate: this.state.birthDate
             })
         })
-            //.then(this.props.history.push("/game"))
-            .then(() => this.redirectToProfile)
+            .then(this.props.history.push(`/user/${id}/profile`))
 
             .catch(err => {
                 if (err.message.match(/Failed to fetch/)) {
                     alert("The server cannot be reached. Did you start it?");
                 } else {
-                    alert(`Something went wrong during the login: ${err.message}`);
+                    alert(`Can't redirect!: ${err.message}`);
                 }
             });
     }
@@ -162,12 +161,12 @@ class ProfileEditor extends React.Component {
         );
     }
 
-
     /**
-     * Redirecting to the edit profile page.
+     * Redirecting to the profile page.
      */
     redirectToProfile() {
-        this.props.history.push('/game');
+        let id = this.props.match.params.id;
+        this.props.history.push(`/user/${id}/profile`);
     }
 }
 

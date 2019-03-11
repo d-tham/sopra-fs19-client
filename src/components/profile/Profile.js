@@ -141,7 +141,7 @@ class Profile extends React.Component {
      * Redirecting to the edit profile page.
      */
     redirectToEditor() {
-        this.props.history.push('/user/1/profile/edit');
+        this.props.history.push(`/user/${this.state.user.id}/profile/edit`);
     }
 }
 
