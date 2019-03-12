@@ -2,7 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { BaseContainer } from "../../helpers/layout";
 import { getDomain } from "../../helpers/getDomain";
-import User from "../shared/models/User";
+//import User from "../shared/models/User";
 import { withRouter } from "react-router-dom";
 import { Button } from "../../views/design/Button";
 
@@ -96,11 +96,14 @@ class Login extends React.Component {
     })
       .then(response => response.json())
       .then(returnedUser => {
-        const user = new User(returnedUser);
-        // store the token into the local storage
-        localStorage.setItem("token", user.token);
-        // user login successfully worked --> navigate to the route /game in the GameRouter
-        this.props.history.push(`/game`);
+        if (returnedUser.status === 404) {
+          alert('Username was not found!')
+        } else if (returnedUser.status === 401) {
+          alert('Incorrect login credentials.')
+        } else {
+          localStorage.setItem("token", returnedUser.token)
+          this.props.history.push(`/game`);
+        }
       })
       .catch(err => {
         if (err.message.match(/Failed to fetch/)) {
@@ -168,7 +171,7 @@ class Login extends React.Component {
                 Login
               </Button>
               <Button
-                  width="35%"
+                  width="50%"
                   onClick={() => {
                     this.redirectToRegister();
                   }}

@@ -20,7 +20,7 @@ const Form = styled.div`
   flex-direction: column;
   justify-content: center;
   width: 60%;
-  height: 450px;
+  height: 600px;
   font-size: 16px;
   font-weight: 300;
   padding-left: 37px;
@@ -102,7 +102,7 @@ class Register extends React.Component {
             .then(response => response.json())
 
             .then(response => {
-                if (response.status === 400) {
+                if (response.status === 409) {
                     alert("The username was already taken.\nPlease choose a different username.")
                 } else {
                     this.redirectToLogin();
@@ -188,16 +188,21 @@ class Register extends React.Component {
                         />
                         <ButtonContainer>
                             <Button
-                                disabled={!this.state.username || !this.state.name || !this.state.password}
+                                disabled={!this.state.username || !this.state.name || !this.state.password || !this.state.confirmPassword}
                                 width="50%"
                                 onClick={() => {
-                                    this.register();
+                                    if (this.state.password !== this.state.confirmPassword) {
+                                        alert(`The passwords do not match! Please re-enter the passwords.`)
+
+                                    } else {
+                                        this.register()
+                                    }
                                 }}
                             >
                                 Register
                             </Button>
                             <Button
-                                width="35%"
+                                width="50%"
                                 onClick={() => {
                                     this.redirectToLogin();
                                 }}
