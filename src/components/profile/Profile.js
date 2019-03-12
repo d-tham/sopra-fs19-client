@@ -116,6 +116,7 @@ class Profile extends React.Component {
                                 Return
                             </Button>
                             <Button
+                                disabled = {localStorage.getItem('token') !== this.state.user.token}
                                 width="50%"
                                 onClick={() => {
                                     this.redirectToEditor();

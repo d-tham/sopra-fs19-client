@@ -75,7 +75,7 @@ class ProfileEditor extends React.Component {
     constructor() {
         super();
         this.state = {
-            user: new User()
+            user: new User(),
         };
     }
     /**
@@ -92,7 +92,8 @@ class ProfileEditor extends React.Component {
             },
             body: JSON.stringify({
                 username: this.state.username,
-                birthDate: this.state.birthDate
+                birthDate: this.state.birthDate,
+                token: localStorage.getItem('token')
             })
         })
             .then(this.props.history.push(`/user/${id}/profile`))
