@@ -89,11 +89,11 @@ class ProfileEditor extends React.Component {
             method: "PUT",
             headers: {
                 "Content-Type": "application/json",
+                "Access-Token": localStorage.getItem('token')
             },
             body: JSON.stringify({
                 username: this.state.username,
                 birthDate: this.state.birthDate,
-                token: localStorage.getItem('token')
             })
         })
             .then(this.props.history.push(`/user/${id}/profile`))
