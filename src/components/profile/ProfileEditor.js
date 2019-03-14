@@ -78,17 +78,17 @@ class ProfileEditor extends React.Component {
             user: new User(),
         };
     }
-    /**
-     * HTTP POST request is sent to the backend.
-     * If the request is successful, a new user is returned to the front-end and its token is stored in the localStorage.
-     */
 
+    /**
+     * HTTP PUT request is sent to the backend.
+     * If the request is successful, the user data will be updated.
+     */
     edit() {
         let id = this.props.match.params.id;
         fetch(`${getDomain()}/users/${id}`, {
             method: "PUT",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
             },
             body: JSON.stringify({
                 username: this.state.username,
@@ -148,6 +148,7 @@ class ProfileEditor extends React.Component {
                                 Cancel
                             </Button>
                             <Button
+                                disabled={!this.state.username}
                                 width="50%"
                                 onClick={() => {
                                     this.edit();

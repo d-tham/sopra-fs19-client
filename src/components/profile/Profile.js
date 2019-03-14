@@ -64,10 +64,7 @@ class Profile extends React.Component {
             user: new User()
         };
     }
-    /**
-     * HTTP POST request is sent to the backend.
-     * If the request is successful, a new user is returned to the front-end and its token is stored in the localStorage.
-     */
+
 
     /**
      * componentDidMount() is invoked immediately after a component is mounted (inserted into the tree).
@@ -76,12 +73,13 @@ class Profile extends React.Component {
      * You may call setState() immediately in componentDidMount().
      * It will trigger an extra rendering, but it will happen before the browser updates the screen.
      */
-    componentWillMount() {
+    componentDidMount() {
         let id = this.props.match.params.id;
         fetch(`${getDomain()}/users/${id}`, {
             method: "GET",
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "Access-Token": localStorage.getItem('token')
             },
         })
             .then(response => response.json())
@@ -92,7 +90,7 @@ class Profile extends React.Component {
                 if (err.message.match(/Failed to fetch/)) {
                     alert("The server cannot be reached. Did you start it?");
                 } else {
-                    alert(`Something went wrong during the login: ${err.message}`);
+                    alert(`Something went wrong during viewing the profile: ${err.message}`);
                 }
             });
     }
