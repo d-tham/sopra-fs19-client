@@ -96,7 +96,12 @@ class ProfileEditor extends React.Component {
                 birthDate: this.state.birthDate,
             })
         })
-            .then(this.props.history.push(`/user/${id}/profile`))
+            .then(response => {
+                if (response.status === 409) {
+                    alert("The chosen username is already taken. Please choose a different username.");
+                }
+                this.props.history.push(`/user/${id}/profile`)
+            })
 
             .catch(err => {
                 if (err.message.match(/Failed to fetch/)) {
